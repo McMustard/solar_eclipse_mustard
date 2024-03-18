@@ -561,6 +561,14 @@ def do_test(args):
 def do_capture(args):
     """Handles the `capture` subcommand."""
     camera = Camera(args.model, args.port)
+    if args.aperture:
+        camera.set_aperture(args.aperture)
+    if args.iso:
+        camera.set_iso(args.iso)
+    if args.shutter_speed:
+        camera.set_shutter_speed(args.shutter_speed)
+    if args.aperture or args.iso or args.shutter_speed:
+        camera.apply_settings()
     camera.capture()
     camera.close()
 
