@@ -670,7 +670,7 @@ class EventParser:
 
         default_date = None
 
-        with open(filename, 'r') as file:
+        with open(filename, 'r', encoding='utf', errors='replace') as file:
             for line in file:
                 if m := self.re_cX_a.match(line):
                     num, date, time = m.groups()
