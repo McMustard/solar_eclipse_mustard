@@ -168,7 +168,8 @@ class IsoController:
     def __init__(self, widget):
         self.widget = widget
         self.iso_strs = widget.choices
-        self.iso_ints = [int(x) for x in widget.choices]
+        self.iso_ints = [int(x) if x.isdigit() else None
+                         for x in widget.choices]
         self.iso_map = { }
 
 
