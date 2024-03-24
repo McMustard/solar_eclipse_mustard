@@ -14,7 +14,7 @@ import gphoto2 as gp
 from playsound import playsound
 
 # local imports
-import cam
+import camera as cam
 import sem
 
 # Constants
@@ -149,7 +149,7 @@ def main():
     camera = argparse.ArgumentParser(add_help=False)
     camera.add_argument('--list-cameras', action='store_true',
                         help="list camera models and exit")
-    camera.add_argument('-m', '--model', type=str,
+    camera.add_argument('-m', '--model', type=str, required=True,
                         help="camera model name (exact)")
     camera.add_argument('-p', '--port', metavar="PORT", type=str,
                         help="port path (e.g. \"usb:000,000\")")
