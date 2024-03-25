@@ -53,7 +53,7 @@ def do_print(args):
 def do_test(args):
     """Handle the `test` subcommand."""
 
-    camera = Camera(args.model, args.port)
+    camera = Camera(args.model, args.port, delete=args.delete_images)
 
     # 
     if False:
@@ -113,7 +113,7 @@ def do_test(args):
 
 def do_capture(args):
     """Handles the `capture` subcommand."""
-    camera = Camera(args.model, args.port)
+    camera = Camera(args.model, args.port, delete=args.delete_images)
     if args.aperture:
         camera.set_aperture(args.aperture)
     if args.iso:
@@ -147,6 +147,10 @@ def main():
                         help="camera model name (exact)")
     camera.add_argument('-p', '--port', metavar="PORT", type=str,
                         help="port path (e.g. \"usb:000,000\")")
+    camera.add_argument('-D', '--delete-images', action='store_true',
+                        help="delete images after capturing. (for cameras "
+                        "where images are saved to memory and a temporary "
+                        "buffer, which need to be freed up.)")
 
     # Exposure arguments
     exposure = argparse.ArgumentParser(add_help=False)

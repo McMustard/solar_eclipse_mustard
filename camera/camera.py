@@ -21,12 +21,13 @@ class CameraInitFailed(Exception):
 class Camera:
     """Decorates a gp.Camera object."""
 
-    def __init__(self, model=None, port=None):
+    def __init__(self, model=None, port=None, delete=False):
         self.gp_camera = gp.Camera()
         self._select(model, port)
         self.iso_ctrl = None
         self.aperture_ctrl = None
         self.shutterspeed_ctrl = None
+        self.delete_images = delete
         try:
             self.gp_camera.init()
         except gp.GPhoto2Error:
@@ -136,8 +137,9 @@ class Camera:
         self.gp_camera.trigger_capture()
 
 
-    def trigger_capture_and_wait(self, timeout=100):
-        """Trigger a capture and wait for the camera to be ready again."""
+    def trigger_capture_and_wait(self, timeout=100, max_iters=10):
+        """Trigger a capture, wait for the camera to be ready again, """
+        """and delete the image if configured to."""
 
         # timout is 1/1000 s (so 100 is 1/10 s)
         gp_camera = self.gp_camera
@@ -157,6 +159,10 @@ class Camera:
             except GPhoto2Error as ex:
                 tb.print_exc()
                 break
+            if event == gp.GP_EVENT_FILE_ADDED:
+                if self.delete_images:
+                    logging.info(f"Deleting image: {data.folder}/{data.name}")
+                    gp_camera.file_delete(data.folder, data.name)
             iters += 1
             if iters >= max_iters: break
 
@@ -164,6 +170,7 @@ class Camera:
     def capture(self):
         """Capture an image, and wait for the file to be written."""
         self.gp_camera.capture(gp.GP_CAPTURE_IMAGE)
+        # TODO delete the file here?
 
 
     def preview(self):

@@ -58,7 +58,8 @@ class Sequencer:
 
     def _select_camera(self, args):
         # Select the camera.
-        return cam.Camera(model=args.model, port=args.port)
+        return cam.Camera(model=args.model, port=args.port,
+                          delete=args.delete_images)
 
 
     def _set_clock(self, args):
@@ -153,6 +154,10 @@ def main():
                         help="camera model name (exact)")
     camera.add_argument('-p', '--port', metavar="PORT", type=str,
                         help="port path (e.g. \"usb:000,000\")")
+    camera.add_argument('-D', '--delete-images', action='store_true',
+                        help="delete images after capturing. (for cameras "
+                        "where images are saved to memory and a temporary "
+                        "buffer, which need to be freed up.)")
 
     # Main arguments
     parser = argparse.ArgumentParser(fromfile_prefix_chars='@',
